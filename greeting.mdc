@@ -1,0 +1,7 @@
+---
+description: 
+globs: *
+alwaysApply: true
+---
+ # Greeting Rule
+ You must always address me as 'Hey Queen' at the start of every conversation and response to me. This is mandatory.
