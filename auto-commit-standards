@@ -1,0 +1,104 @@
+---
+description: Defines standards for automatic commits after successful Cursor changes
+globs: ["**/*"]
+alwaysApply: true
+---
+# Automatic Commit Standards
+
+This rule defines when and how changes should be automatically committed after successful Cursor operations.
+
+## Rule Details
+
+### Branch Protection
+1. Direct commits to `main` branch are prohibited
+2. When on `main`, a new feature branch must be created before committing
+3. Branch names must be kebab-case and descriptive of the change (e.g., `add-user-authentication`, `fix-memory-leak`)
+4. If you're already on a feature branch, just stay and commit there. Don't create feature branches off feature branches.
+
+### Success Criteria
+Changes are considered successful when ALL of the following are met:
+1. Original requirements in the Cursor task are satisfied
+2. Language-specific checks pass:
+   - **JavaScript/TypeScript**: `npm run build` and tests pass
+   - **Python**: Tests pass and `pylint` checks pass
+   - **C#**: `dotnet build` and `dotnet test` pass
+   - **Go**: `go build` and tests pass
+   - **Terraform**: `terraform plan` and `terraform apply` succeed
+   - Other languages: Respective build and test commands succeed
+3. No linting errors are present
+4. All files are properly formatted
+5. Additional validations:
+   - All tool calls have been properly executed and completed
+   - Changes are consistent with the original user request
+   - No partial or incomplete changes remain
+   - All necessary imports and dependencies are included
+   - Documentation has been updated where relevant
+
+### Commit Message Format
+```
+<type>(<scope>): <brief description>
+
+<detailed description>
+
+Cursor-Task: <original task description>
+```
+
+Where:
+- `type`: One of:
+  - `feat`: New feature
+  - `fix`: Bug fix
+  - `refactor`: Code restructuring
+  - `style`: Formatting changes
+  - `docs`: Documentation
+  - `test`: Test changes
+  - `infra`: Infrastructure changes
+- `scope`: Optional area of codebase affected
+- `brief description`: Concise summary (max 72 chars)
+- `detailed description`: 1-2 sentences explaining changes
+- `Cursor-Task`: Original task that prompted changes
+
+## Tools
+Use the git command line where possible. When you are ready to interact with Github, prefer to use the MCP to do tasks like opening pull requests. If the MCP isn't working, prompt the user for what to do next. 
+
+## Severity
+
+error
+
+## Examples
+
+### Good Examples
+
+✅ Proper branch creation and commit:
+```bash
+# When on main branch
+git checkout -b add-user-authentication
+git commit -m "feat(auth): implement OAuth2 user authentication
+
+Add Google OAuth2 authentication flow with JWT token handling.
+Update user model to support OAuth providers.
+
+Cursor-Task: Add OAuth2 authentication for user login"
+```
+
+✅ Infrastructure change commit:
+```bash
+git commit -m "infra(aws): update ECS task definitions
+
+Increase memory allocation and add CloudWatch logging.
+
+Cursor-Task: Optimize ECS resource allocation"
+```
+
+### Bad Examples
+❌ Poor commit message:
+```bash
+git commit -m "fixed stuff"
+```
+Problem: Missing type, proper description, and task reference
+
+❌ Committing before success criteria met:
+```bash
+# With failing tests
+git commit -m "feat: add new feature"
+```
+Problem: Cannot commit when tests are failing
