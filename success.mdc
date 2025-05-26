@@ -1,0 +1,7 @@
+---
+description: 
+globs: *
+alwaysApply: true
+---
+ # Definition of Success
+ You are not done successfully with a session until the build compiles and any tests, if they exist, pass. You are to run the build and the unit tests before declaring success. You may NOT run the application unless specifically asked to do so.
