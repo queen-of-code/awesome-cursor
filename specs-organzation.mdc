@@ -1,0 +1,181 @@
+---
+description: Enforces consistent spec organization and quality
+globs: ["**/*.md"]
+alwaysApply: false
+---
+# Feature Specification Organization and Standards
+
+Ensures proper organization, completeness, and quality of feature specifications.
+
+## Rule Details
+
+1. Spec Location MUST:
+   - Place frontend specs in `specs/frontend/`
+   - Place backend specs in `specs/backend/`
+   - Use kebab-case for filenames (e.g., `user-authentication.md`)
+   - Never mix frontend and backend features in the same spec
+   - Follow folder structure:
+     ```
+     specs/
+     ├── specs.md          # Template
+     ├── frontend/         # Frontend feature specs
+     └── backend/         # Backend feature specs
+     ```
+
+2. Spec Content MUST:
+   - Include all required sections from template
+   - Remove irrelevant sections (e.g., UI sections in backend specs)
+   - Keep specs focused (one feature per spec)
+   - Include specific, measurable acceptance criteria
+   - Document all edge cases
+   - Include clear rollback procedures
+   - Reference related specs when dependencies exist
+
+3. Related Specs MUST:
+   - Link to corresponding frontend/backend specs when they exist
+   - Use relative paths from the specs root (e.g., `frontend/feature-name.md`)
+   - Include brief description of the relationship
+   - Maintain bidirectional links (both specs reference each other)
+   - Update related spec references when specs are moved or renamed
+   - Example format:
+     ```markdown
+     ## Related Specs
+     - Frontend: frontend/user-profile-page.md
+       - Implements the UI for this service
+     - Backend: backend/user-service.md
+       - Provides the API endpoints for this feature
+     - Related: backend/media-service.md
+       - Handles image processing for user profiles
+     ```
+
+4. Version Control MUST:
+   - Track spec changes in git
+   - Include meaningful commit messages
+   - Update "Last Updated" date when modified
+   - Maintain change history in spec
+   - Link to related pull requests
+
+## Severity
+
+error
+
+## Examples
+
+### Good Examples
+
+✅ Proper spec organization:
+```
+specs/
+├── frontend/
+│   └── user-profile-page.md     # Frontend feature
+└── backend/
+    └── user-service.md         # Backend service
+```
+
+✅ Proper spec content:
+```markdown
+## Overview
+**Feature Name**: User Profile Service
+**Type**: Backend
+**Status**: Draft
+**Author**: Jane Smith
+**Last Updated**: 2024-03-15
+
+## Related Specs
+- Frontend: frontend/user-profile-page.md
+  - Implements the user profile UI using this service
+- Related: backend/media-service.md
+  - Handles image processing for user profiles
+- Related: backend/analytics-service.md
+  - Tracks user profile views and interactions
+
+## Business Context
+### Problem Statement
+Users need a centralized service to manage their profile information,
+including biography, account type, and login history. Currently, this data
+is scattered across multiple services, leading to inconsistency and
+maintenance challenges.
+
+### Goals
+- Provide a single source of truth for user profile data
+- Enable real-time profile updates
+- Support rich media content (images, videos)
+
+### Non-Goals
+- Social media integration
+- Content moderation
+- Payment processing
+
+[Additional sections following template...]
+```
+
+✅ Proper dependency documentation:
+```markdown
+### Dependencies
+- PostgreSQL 14+
+- Redis 6.2+ for caching
+- S3 compatible storage for media
+- OpenTelemetry for observability
+
+### Integration Points
+- Authentication Service
+  - JWT validation
+  - Rate limit: 1000 req/min
+- Media Processing Service
+  - Async image processing
+  - Max file size: 10MB
+- Event Bus
+  - Profile update events
+  - Fanout to subscribers
+```
+
+### Bad Examples
+
+❌ Poor spec location:
+```
+specs/
+└── user-feature.md  # Wrong: Not in frontend or backend folder
+```
+
+❌ Mixed concerns:
+```markdown
+## Feature: User Management
+This spec includes both frontend UI components and backend API endpoints
+# Wrong: Mixing frontend and backend concerns in one spec
+```
+
+❌ Missing related specs:
+```markdown
+## Overview
+**Feature Name**: User Profile Page
+**Type**: Frontend
+**Status**: Draft
+
+# Wrong: Missing Related Specs section for corresponding backend service
+```
+
+❌ Poor related specs documentation:
+```markdown
+## Related Specs
+- artist-service.md  # Wrong: Missing proper path and relationship description
+- some-other-spec  # Wrong: Missing file extension and relationship context
+```
+
+❌ Vague requirements:
+```markdown
+### Performance Requirements
+- Should be fast  # Wrong: Not specific
+- Handle many users  # Wrong: Not measurable
+- Good response time  # Wrong: Not quantified
+```
+
+❌ Missing critical sections:
+```markdown
+## Overview
+**Feature Name**: User Authentication
+# Wrong: Missing type, status, author, date
+
+## Implementation
+Start coding the feature
+# Wrong: Missing requirements, testing strategy, rollout plan
+``` 
